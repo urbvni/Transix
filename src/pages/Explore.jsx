@@ -2,6 +2,7 @@ import { useEffect, useMemo, useState } from 'react';
 import { supabase } from '../lib/supabase';
 import { CAMELOT_KEYS, BPM_STEPS } from '../lib/camelot';
 import TransitionCard from '../components/TransitionCard';
+import { attachCounts } from '../lib/counts';
 import './Explore.css';
 
 const PAGE_SIZE = 12;
@@ -62,7 +63,8 @@ export default function Explore() {
           genre_id: t.genre_id,
           created_at: t.created_at,
         }));
-        setTransitions(normalized);
+        const withCounts = await attachCounts(normalized);
+        setTransitions(withCounts);
       }
       setLoading(false);
     }

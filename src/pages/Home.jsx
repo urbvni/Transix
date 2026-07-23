@@ -4,15 +4,15 @@ import SearchBar from '../components/SearchBar';
 import TransitionCard from '../components/TransitionCard';
 import { MOCK_TRANSITIONS } from '../lib/mockData';
 import { supabase } from '../lib/supabase';
+import { attachCounts } from '../lib/counts';
 import './Home.css';
 
 export default function Home() {
   const [filters, setFilters] = useState({ text: '', key: '', bpmMin: '', bpmMax: '' });
   const [transitions, setTransitions] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [source, setSource] = useState('loading'); // 'db' | 'mock' | 'loading'
+  const [source, setSource] = useState('loading');
 
-  // Fetch transizioni da Supabase all'avvio
   useEffect(() => {
     async function fetchTransitions() {
       if (!supabase) {
@@ -22,7 +22,6 @@ export default function Home() {
         return;
       }
 
-      // Join: transizioni + nome DJ dal profilo + nome genere
       const { data, error } = await supabase
         .from('transitions')
         .select(`
@@ -36,11 +35,9 @@ export default function Home() {
         .order('created_at', { ascending: false });
 
       if (error || !data || data.length === 0) {
-        // Nessuna transizione in DB → usa i mock così la home non è vuota
         setTransitions(MOCK_TRANSITIONS);
         setSource('mock');
       } else {
-        // Normalizza il formato per il componente Card (stessa forma dei mock)
         const normalized = data.map((t) => ({
           id: t.id,
           title: t.title,
@@ -55,7 +52,8 @@ export default function Home() {
           genre: t.genres?.name || '',
           audio_url: t.audio_url,
         }));
-        setTransitions(normalized);
+        const withCounts = await attachCounts(normalized);
+        setTransitions(withCounts);
         setSource('db');
       }
       setLoading(false);

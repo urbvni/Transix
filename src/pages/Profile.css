@@ -146,3 +146,98 @@
   .profile-stats { justify-content: center; }
   .profile-edit { justify-self: center; }
 }
+
+/* Tabs */
+.profile-tabs {
+  display: flex;
+  gap: 4px;
+  border-bottom: 1px solid var(--border);
+  margin-bottom: 32px;
+  overflow-x: auto;
+}
+.profile-tab {
+  padding: 12px 20px;
+  color: var(--text-dim);
+  font-size: 14px;
+  font-weight: 500;
+  border-bottom: 2px solid transparent;
+  transition: color 0.2s, border-color 0.2s;
+  white-space: nowrap;
+  background: transparent;
+  display: flex;
+  gap: 8px;
+  align-items: center;
+}
+.profile-tab:hover { color: var(--text); }
+.profile-tab span { color: var(--text-dimmer); font-size: 12px; }
+.profile-tab-active {
+  color: var(--text);
+  border-bottom-color: var(--accent-b);
+}
+.profile-tab-active span { color: var(--accent-b-text); }
+
+/* Collezioni */
+.profile-collections {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+.coll {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+  transition: border-color 0.2s;
+}
+.coll-open { border-color: var(--accent-a-mid); }
+
+.coll-head {
+  width: 100%;
+  padding: 18px 20px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  color: var(--text);
+  font-size: 15px;
+  font-weight: 500;
+  text-align: left;
+  background: transparent;
+  transition: background 0.2s;
+}
+.coll-head:hover { background: var(--surface-hi); }
+
+.coll-arrow {
+  width: 18px;
+  height: 18px;
+  color: var(--text-dim);
+  transition: transform 0.2s;
+  flex-shrink: 0;
+}
+.coll-open .coll-arrow { transform: rotate(180deg); }
+
+.coll-name { flex: 1; }
+.coll-default {
+  font-size: 10px;
+  color: var(--text-dimmer);
+  padding: 3px 8px;
+  background: var(--bg);
+  border-radius: 4px;
+}
+.coll-delete {
+  font-size: 12px;
+  color: var(--text-dimmer);
+  padding: 4px 10px;
+  border-radius: 6px;
+  transition: color 0.2s, background 0.2s;
+  cursor: pointer;
+}
+.coll-delete:hover {
+  color: #ff9a9a;
+  background: rgba(255, 89, 89, 0.1);
+}
+
+.coll-body {
+  padding: 0 20px 20px;
+  border-top: 1px solid var(--border);
+  padding-top: 20px;
+}

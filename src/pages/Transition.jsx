@@ -2,41 +2,45 @@ import { useEffect, useState } from 'react';
 import { useParams, useNavigate, Link } from 'react-router-dom';
 import { supabase } from '../lib/supabase';
 import { isMinorKey } from '../lib/camelot';
+import { useAuth } from '../lib/AuthContext';
 import AudioPlayer from '../components/AudioPlayer';
+import LikeButton from '../components/LikeButton';
+import SaveButton from '../components/SaveButton';
+import Comments from '../components/Comments';
 import './Transition.css';
 
 export default function Transition() {
   const { id } = useParams();
   const navigate = useNavigate();
+  const { user } = useAuth();
   const [transition, setTransition] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [copied, setCopied] = useState(false);
+  const [likeCount, setLikeCount] = useState(0);
+  const [userLiked, setUserLiked] = useState(false);
 
   useEffect(() => {
     if (!supabase || !id) return;
 
-    async function fetchTransition() {
+    async function fetchAll() {
       setLoading(true);
-      const { data, error } = await supabase
-        .from('transitions')
-        .select(`
-          *,
-          profiles ( id, dj_name, bio ),
-          genres ( name )
-        `)
-        .eq('id', id)
-        .single();
+      const [{ data: t, error }, { data: likes }] = await Promise.all([
+        supabase.from('transitions').select(`*, profiles ( id, dj_name, bio ), genres ( name )`).eq('id', id).single(),
+        supabase.from('likes').select('user_id').eq('transition_id', id),
+      ]);
 
-      if (error || !data) {
+      if (error || !t) {
         setError('Transizione non trovata.');
       } else {
-        setTransition(data);
+        setTransition(t);
+        setLikeCount(likes?.length || 0);
+        setUserLiked(!!(user && likes?.some((l) => l.user_id === user.id)));
       }
       setLoading(false);
     }
-    fetchTransition();
-  }, [id]);
+    fetchAll();
+  }, [id, user]);
 
   function handleShare() {
     navigator.clipboard.writeText(window.location.href);
@@ -44,16 +48,11 @@ export default function Transition() {
     setTimeout(() => setCopied(false), 2000);
   }
 
-  if (loading) {
-    return <div className="container" style={{ padding: 80, textAlign: 'center' }}>Caricamento...</div>;
-  }
+  if (loading) return <div className="container" style={{ padding: 80, textAlign: 'center' }}>Caricamento...</div>;
   if (error || !transition) {
     return (
       <div className="container" style={{ padding: 80, textAlign: 'center' }}>
         <h1 style={{ marginBottom: 12 }}>Transizione non trovata</h1>
-        <p style={{ color: 'var(--text-dim)', marginBottom: 24 }}>
-          Non riusciamo a caricare questa transizione.
-        </p>
         <button onClick={() => navigate('/')} className="link-btn">Torna alla home</button>
       </div>
     );
@@ -66,7 +65,6 @@ export default function Transition() {
   return (
     <div className="transition-page">
       <div className="container">
-        {/* Breadcrumb */}
         <nav className="tp-crumb">
           <Link to="/">Home</Link>
           <span>/</span>
@@ -81,17 +79,23 @@ export default function Transition() {
               di <Link to={`/dj/${t.profiles?.id}`} className="tp-dj-link">{t.profiles?.dj_name || 'DJ'}</Link>
             </p>
           </div>
-          <button className="tp-share" onClick={handleShare}>
-            {copied ? '✓ Link copiato' : 'Condividi'}
-          </button>
+          <div className="tp-actions">
+            <div className="tp-action-box">
+              <LikeButton transitionId={t.id} initialLiked={userLiked} initialCount={likeCount} size="lg" />
+            </div>
+            <div className="tp-action-box">
+              <SaveButton transitionId={t.id} size="lg" />
+            </div>
+            <button className="tp-share" onClick={handleShare}>
+              {copied ? '✓ Copiato' : 'Condividi'}
+            </button>
+          </div>
         </header>
 
-        {/* Player */}
         <div className="tp-player">
           <AudioPlayer url={t.audio_url} />
         </div>
 
-        {/* Tracce */}
         <div className="tp-tracks">
           <div className="tp-track">
             <div className="tp-track-head">
@@ -130,7 +134,6 @@ export default function Transition() {
           </div>
         </div>
 
-        {/* Info tecniche */}
         <div className="tp-info">
           <div className="tp-info-item">
             <span className="tp-info-label mono">BPM SYNC</span>
@@ -152,6 +155,8 @@ export default function Transition() {
             <p>{t.description}</p>
           </div>
         )}
+
+        <Comments transitionId={t.id} />
       </div>
     </div>
   );

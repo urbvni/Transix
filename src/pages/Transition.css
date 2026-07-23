@@ -206,3 +206,37 @@
   .tp-title { font-size: 32px; }
   .tp-header { flex-direction: column; }
 }
+
+/* Wrapper azioni header (like + share) */
+.tp-actions {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+  flex-shrink: 0;
+}
+.tp-like-wrap {
+  padding: 8px 14px;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  transition: border-color 0.2s;
+}
+.tp-like-wrap:hover { border-color: var(--accent-b-mid); }
+
+.tp-actions {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+  flex-shrink: 0;
+  flex-wrap: wrap;
+}
+.tp-action-box {
+  padding: 8px 14px;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  transition: border-color 0.2s;
+  display: flex;
+  align-items: center;
+}
+.tp-action-box:hover { border-color: var(--accent-b-mid); }
