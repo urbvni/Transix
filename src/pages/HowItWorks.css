@@ -1,0 +1,202 @@
+.how-page {
+  padding: 40px 0 100px;
+}
+
+.how-header {
+  text-align: center;
+  max-width: 720px;
+  margin: 0 auto 40px;
+}
+.how-eyebrow {
+  display: inline-block;
+  font-size: 11px;
+  color: var(--accent-a-text);
+  background: var(--accent-a-soft);
+  border: 1px solid var(--accent-a-mid);
+  padding: 5px 12px;
+  border-radius: 999px;
+  letter-spacing: 0.2em;
+  margin-bottom: 16px;
+}
+.how-header h1 {
+  font-family: var(--font-head);
+  font-size: 48px;
+  font-weight: 700;
+  letter-spacing: -0.03em;
+  line-height: 1.05;
+  margin-bottom: 20px;
+}
+.how-lead {
+  color: var(--text-dim);
+  font-size: 17px;
+  line-height: 1.65;
+}
+
+/* Sezione ruota */
+.how-wheel-section {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  padding: 40px;
+  margin-bottom: 60px;
+  overflow: hidden;
+}
+.how-wheel-intro {
+  text-align: center;
+  max-width: 560px;
+  margin: 0 auto 20px;
+}
+.how-wheel-intro h2 {
+  font-family: var(--font-head);
+  font-size: 24px;
+  font-weight: 600;
+  margin-bottom: 8px;
+}
+.how-wheel-intro p {
+  color: var(--text-dim);
+  font-size: 14px;
+  line-height: 1.6;
+}
+
+/* Sezioni generiche */
+section h2 {
+  font-family: var(--font-head);
+  font-size: 28px;
+  font-weight: 700;
+  margin-bottom: 24px;
+  letter-spacing: -0.02em;
+}
+
+/* Regole */
+.how-rules {
+  margin-bottom: 60px;
+}
+.how-rule {
+  display: grid;
+  grid-template-columns: 60px 1fr;
+  gap: 24px;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  padding: 28px;
+  margin-bottom: 16px;
+  align-items: start;
+}
+.how-rule-num {
+  font-size: 32px;
+  font-weight: 500;
+  color: var(--accent-a-text);
+  line-height: 1;
+}
+.how-rule-body h3 {
+  font-family: var(--font-head);
+  font-size: 18px;
+  font-weight: 600;
+  margin-bottom: 8px;
+}
+.how-rule-body p {
+  color: var(--text-dim);
+  line-height: 1.7;
+}
+
+/* Notazione */
+.how-notation { margin-bottom: 60px; }
+.how-notation-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 16px;
+}
+.how-note-card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  padding: 24px;
+  display: flex;
+  gap: 16px;
+  align-items: flex-start;
+}
+.how-note-key {
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 48px;
+  height: 48px;
+  border-radius: 10px;
+  font-weight: 600;
+  font-size: 16px;
+}
+.how-note-key-a {
+  background: var(--accent-a-soft);
+  color: var(--accent-a-text);
+  border: 1px solid var(--accent-a-mid);
+}
+.how-note-key-b {
+  background: var(--accent-b-soft);
+  color: var(--accent-b-text);
+  border: 1px solid var(--accent-b-mid);
+}
+.how-note-key-num {
+  background: var(--surface-hi);
+  color: var(--text);
+  border: 1px solid var(--border);
+  font-size: 12px;
+}
+.how-note-card h3 {
+  font-family: var(--font-head);
+  font-size: 15px;
+  font-weight: 600;
+  margin-bottom: 6px;
+}
+.how-note-card p {
+  color: var(--text-dim);
+  font-size: 13px;
+  line-height: 1.6;
+}
+
+/* CTA */
+.how-cta {
+  text-align: center;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  padding: 48px 24px;
+  position: relative;
+  overflow: hidden;
+}
+.how-cta::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(circle at 50% 0%, rgba(255, 122, 61, 0.15), transparent 60%);
+  pointer-events: none;
+}
+.how-cta h2 { margin-bottom: 8px; position: relative; z-index: 1; }
+.how-cta p {
+  color: var(--text-dim);
+  margin-bottom: 24px;
+  position: relative;
+  z-index: 1;
+}
+.how-cta-btn {
+  display: inline-block;
+  padding: 14px 28px;
+  background: linear-gradient(135deg, var(--accent-b), #ff9a5c);
+  color: #1a0800;
+  font-weight: 600;
+  border-radius: 10px;
+  transition: box-shadow 0.3s, transform 0.2s;
+  position: relative;
+  z-index: 1;
+}
+.how-cta-btn:hover {
+  box-shadow: 0 0 32px rgba(255, 122, 61, 0.5);
+  transform: translateY(-2px);
+}
+
+@media (max-width: 720px) {
+  .how-header h1 { font-size: 36px; }
+  .how-wheel-section { padding: 24px 12px; }
+  .how-notation-grid { grid-template-columns: 1fr; }
+  .how-rule { grid-template-columns: 1fr; gap: 12px; }
+}

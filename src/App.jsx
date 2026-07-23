@@ -9,6 +9,7 @@ import Upload from './pages/Upload';
 import Transition from './pages/Transition';
 import Profile from './pages/Profile';
 import Settings from './pages/Settings';
+import HowItWorks from './pages/HowItWorks';
 
 export default function App() {
   return (
@@ -18,7 +19,7 @@ export default function App() {
         <Routes>
           <Route path="/" element={<Home />} />
           <Route path="/explore" element={<Placeholder title="Esplora" />} />
-          <Route path="/how" element={<Placeholder title="Come funziona" />} />
+          <Route path="/how" element={<HowItWorks />} />
           <Route path="/upload" element={<Upload />} />
           <Route path="/login" element={<Login />} />
           <Route path="/signup" element={<Signup />} />
