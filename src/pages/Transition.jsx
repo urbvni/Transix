@@ -12,7 +12,7 @@ import './Transition.css';
 export default function Transition() {
   const { id } = useParams();
   const navigate = useNavigate();
-  const { user } = useAuth();
+  const { user, loading: authLoading } = useAuth();
   const [transition, setTransition] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -21,7 +21,7 @@ export default function Transition() {
   const [userLiked, setUserLiked] = useState(false);
 
   useEffect(() => {
-    if (!supabase || !id) return;
+    if (!supabase || !id || authLoading) return;
 
     async function fetchAll() {
       setLoading(true);
@@ -40,7 +40,7 @@ export default function Transition() {
       setLoading(false);
     }
     fetchAll();
-  }, [id, user]);
+  }, [id, user, authLoading]);
 
   function handleShare() {
     navigator.clipboard.writeText(window.location.href);

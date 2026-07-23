@@ -28,11 +28,11 @@ export default function SaveButton({ transitionId, size = 'md' }) {
     return () => document.removeEventListener('mousedown', onClick);
   }, []);
 
-  // Carica dati quando apri il popover
+  // Carica al primo mount se loggato (per sapere se è salvato)
   useEffect(() => {
-    if (!open || !user || !supabase) return;
+    if (!user || !supabase) return;
     fetchData();
-  }, [open, user]);
+  }, [user, transitionId]);
 
   async function fetchData() {
     setLoading(true);
