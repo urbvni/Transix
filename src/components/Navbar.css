@@ -143,5 +143,5 @@
 }
 
 @media (max-width: 640px) {
-  .nav-links > a:not(.nav-cta) { display: none; }
+  .nav-links > a:not(.nav-cta):not(.nav-link-plain) { display: none; }
 }
