@@ -135,3 +135,44 @@
 }
 
 .auth-alt a:hover { color: var(--accent-a); }
+
+/* Schermata post-registrazione (conferma email) */
+.auth-card-confirm {
+  text-align: center;
+}
+.auth-icon {
+  width: 80px;
+  height: 80px;
+  margin: 0 auto 20px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, var(--accent-a-soft), var(--accent-b-soft));
+  border: 1px solid var(--accent-a-mid);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--accent-a-text);
+}
+.auth-email-highlight {
+  color: var(--accent-a-text);
+  font-family: var(--font-mono);
+  font-size: 14px;
+  font-weight: 500;
+}
+.auth-info-box {
+  margin: 24px 0;
+  padding: 16px 18px;
+  background: var(--bg);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  color: var(--text-dim);
+  font-size: 13px;
+  line-height: 1.6;
+  text-align: left;
+}
+.auth-info-box p { margin: 0; }
+.auth-info-box strong { color: var(--text); font-weight: 500; }
+.auth-submit-link {
+  display: block;
+  text-align: center;
+  text-decoration: none;
+}

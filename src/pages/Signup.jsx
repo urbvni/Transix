@@ -9,13 +9,12 @@ export default function Signup() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState(null);
-  const [message, setMessage] = useState(null);
   const [loading, setLoading] = useState(false);
+  const [signupEmail, setSignupEmail] = useState(null); // Se popolato = mostra schermata "controlla email"
 
   async function handleSubmit(e) {
     e.preventDefault();
     setError(null);
-    setMessage(null);
     setLoading(true);
 
     if (!supabase) {
@@ -24,9 +23,7 @@ export default function Signup() {
       return;
     }
 
-    // Il dj_name viene passato nei raw_user_meta_data:
-    // il trigger SQL "handle_new_user" lo legge e crea il record in profiles.
-    const { error } = await supabase.auth.signUp({
+    const { data, error } = await supabase.auth.signUp({
       email,
       password,
       options: { data: { dj_name: djName } },
@@ -35,14 +32,50 @@ export default function Signup() {
     if (error) {
       setError(error.message);
       setLoading(false);
-    } else {
-      // Se la verifica email è disattivata (default in dev), l'utente viene loggato subito.
-      // Se è attiva, avvertiamo di controllare la mail.
-      setMessage('Registrazione completata. Se non vieni reindirizzato, controlla la tua email per confermare l\'account.');
-      setLoading(false);
-      // Piccolo delay per far leggere il messaggio, poi torniamo alla home
-      setTimeout(() => navigate('/'), 2500);
+      return;
     }
+
+    // Se la sessione è null significa che serve conferma email (Supabase ha inviato la mail).
+    // Se invece la sessione esiste, l'utente è già loggato → vai alla home.
+    if (data?.session) {
+      navigate('/');
+    } else {
+      setSignupEmail(email);
+      setLoading(false);
+    }
+  }
+
+  // Schermata post-registrazione: chiedi di controllare la mail
+  if (signupEmail) {
+    return (
+      <div className="auth-page">
+        <div className="auth-card auth-card-confirm">
+          <div className="auth-icon" aria-hidden="true">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" width="48" height="48">
+              <path d="M4 6h16v12H4z" />
+              <path d="m4 6 8 7 8-7" />
+            </svg>
+          </div>
+          <h1 className="auth-title">Controlla la tua email</h1>
+          <p className="auth-sub">
+            Ti abbiamo inviato un link di conferma a<br />
+            <strong className="auth-email-highlight">{signupEmail}</strong>
+          </p>
+          <div className="auth-info-box">
+            <p>
+              Apri l'email e clicca sul link <strong>"Confirm your signup"</strong> per attivare
+              il tuo account. Dopo la conferma potrai accedere.
+            </p>
+            <p style={{ marginTop: 12, fontSize: 12, color: 'var(--text-dimmer)' }}>
+              Non trovi l'email? Controlla la cartella spam.
+            </p>
+          </div>
+          <Link to="/login" className="auth-submit auth-submit-link">
+            Vai al login
+          </Link>
+        </div>
+      </div>
+    );
   }
 
   return (
@@ -90,7 +123,6 @@ export default function Signup() {
           </label>
 
           {error && <div className="auth-error">{error}</div>}
-          {message && <div className="auth-success">{message}</div>}
 
           <button type="submit" className="auth-submit" disabled={loading}>
             {loading ? 'Creazione in corso...' : 'Registrati'}
