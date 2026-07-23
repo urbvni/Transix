@@ -231,12 +231,19 @@
   flex-wrap: wrap;
 }
 .tp-action-box {
-  padding: 8px 14px;
+  height: 44px;
+  min-width: 64px;
+  padding: 0 16px;
   background: var(--surface);
   border: 1px solid var(--border);
   border-radius: 8px;
   transition: border-color 0.2s;
   display: flex;
   align-items: center;
+  justify-content: center;
+}
+.tp-share {
+  height: 44px;
+  padding: 0 18px;
 }
 .tp-action-box:hover { border-color: var(--accent-b-mid); }
