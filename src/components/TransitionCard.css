@@ -1,0 +1,126 @@
+.tcard {
+  position: relative;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  padding: 20px;
+  transition: transform 0.3s cubic-bezier(0.2, 0.7, 0.2, 1),
+              border-color 0.3s, box-shadow 0.3s;
+  cursor: pointer;
+}
+.tcard:hover {
+  transform: translateY(-4px);
+  border-color: var(--accent-b-mid);
+  box-shadow: 0 12px 32px rgba(0, 0, 0, 0.4), 0 0 24px rgba(255, 122, 61, 0.08);
+}
+
+.tcard-play {
+  position: absolute;
+  top: 16px;
+  right: 16px;
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  background: var(--surface-hi);
+  border: 1px solid var(--border);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--text-dim);
+  transition: background 0.2s, color 0.2s, border-color 0.2s;
+}
+.tcard:hover .tcard-play {
+  background: var(--accent-b);
+  color: #1a0800;
+  border-color: var(--accent-b);
+}
+
+.tcard-title {
+  font-family: var(--font-head);
+  font-size: 16px;
+  font-weight: 600;
+  margin-bottom: 14px;
+  padding-right: 44px;
+  letter-spacing: -0.01em;
+}
+
+.tcard-tracks {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  margin-bottom: 14px;
+  padding: 10px 12px;
+  background: rgba(255, 255, 255, 0.02);
+  border-radius: 8px;
+}
+.tcard-track {
+  display: grid;
+  grid-template-columns: 16px 1fr auto;
+  gap: 8px;
+  font-size: 12px;
+  align-items: baseline;
+}
+.tcard-track-label {
+  font-family: var(--font-mono);
+  color: var(--text-dimmer);
+  font-size: 10px;
+}
+.tcard-track-title {
+  color: var(--text);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.tcard-track-artist {
+  color: var(--text-dim);
+  font-size: 11px;
+}
+
+.tcard-keys {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 12px;
+}
+.key {
+  font-family: var(--font-mono);
+  font-size: 12px;
+  font-weight: 500;
+  padding: 4px 10px;
+  border-radius: 6px;
+  border: 1px solid;
+}
+.key-minor {
+  background: var(--accent-a-soft);
+  color: var(--accent-a-text);
+  border-color: var(--accent-a-mid);
+}
+.key-major {
+  background: var(--accent-b-soft);
+  color: var(--accent-b-text);
+  border-color: var(--accent-b-mid);
+}
+.key-arrow {
+  color: var(--text-dimmer);
+  font-size: 14px;
+}
+
+.tcard-meta {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 12px;
+}
+.tcard-bpm {
+  color: var(--text-dim);
+  font-size: 11px;
+}
+.tcard-dj {
+  color: var(--text-dimmer);
+}
+
+.tcard-link {
+  display: block;
+  color: inherit;
+  text-decoration: none;
+}
