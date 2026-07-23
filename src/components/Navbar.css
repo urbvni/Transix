@@ -1,7 +1,7 @@
 .nav {
   position: sticky;
   top: 0;
-  z-index: 100;
+  z-index: 300;
   padding: 20px 0;
   background: rgba(14, 14, 16, 0.7);
   backdrop-filter: blur(16px);
