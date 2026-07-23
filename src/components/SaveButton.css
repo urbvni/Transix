@@ -132,5 +132,9 @@
 
 /* Su mobile popover a schermo */
 @media (max-width: 480px) {
-  .save-pop { width: 240px; right: -60px; }
+  .save-pop {
+    width: min(280px, calc(100vw - 32px));
+    right: 0;
+    left: auto;
+  }
 }
