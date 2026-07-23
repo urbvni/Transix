@@ -133,8 +133,13 @@
 /* Su mobile popover a schermo */
 @media (max-width: 480px) {
   .save-pop {
-    width: min(280px, calc(100vw - 32px));
-    right: 0;
-    left: auto;
+    position: fixed;
+    top: auto;
+    bottom: 16px;
+    left: 16px;
+    right: 16px;
+    width: auto;
+    max-height: 60vh;
+    overflow-y: auto;
   }
 }
