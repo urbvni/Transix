@@ -127,13 +127,13 @@ export default function Navbar() {
           )}
 
           <div className="nav-mobile-links">
-            <Link to="/explore" className="nav-mobile-link">Esplora</Link>
-            <Link to="/how" className="nav-mobile-link">Come funziona</Link>
+            <Link to="/explore" className="nav-mobile-link" onClick={() => setMobileOpen(false)}>Esplora</Link>
+            <Link to="/how" className="nav-mobile-link" onClick={() => setMobileOpen(false)}>Come funziona</Link>
             {user && (
               <>
-                <Link to="/upload" className="nav-mobile-link">Carica transizione</Link>
-                <Link to={`/dj/${user.id}`} className="nav-mobile-link">Il mio profilo</Link>
-                <Link to="/settings" className="nav-mobile-link">Impostazioni</Link>
+                <Link to="/upload" className="nav-mobile-link" onClick={() => setMobileOpen(false)}>Carica transizione</Link>
+                <Link to={`/dj/${user.id}`} className="nav-mobile-link" onClick={() => setMobileOpen(false)}>Il mio profilo</Link>
+                <Link to="/settings" className="nav-mobile-link" onClick={() => setMobileOpen(false)}>Impostazioni</Link>
               </>
             )}
           </div>
@@ -145,9 +145,9 @@ export default function Navbar() {
               </button>
             ) : (
               <>
-                <Link to="/login" className="nav-mobile-login">Accedi</Link>
-                <Link to="/signup" className="nav-mobile-signup">Registrati</Link>
-              </>
+            <Link to="/login" className="nav-mobile-login" onClick={() => setMobileOpen(false)}>Accedi</Link>
+            <Link to="/signup" className="nav-mobile-signup" onClick={() => setMobileOpen(false)}>Registrati</Link>
+                          </>
             )}
           </div>
         </div>
