@@ -10,6 +10,7 @@ import Transition from './pages/Transition';
 import Profile from './pages/Profile';
 import Settings from './pages/Settings';
 import HowItWorks from './pages/HowItWorks';
+import Explore from './pages/Explore';
 
 export default function App() {
   return (
@@ -18,7 +19,7 @@ export default function App() {
         <Navbar />
         <Routes>
           <Route path="/" element={<Home />} />
-          <Route path="/explore" element={<Placeholder title="Esplora" />} />
+          <Route path="/explore" element={<Explore />} />
           <Route path="/how" element={<HowItWorks />} />
           <Route path="/upload" element={<Upload />} />
           <Route path="/login" element={<Login />} />
