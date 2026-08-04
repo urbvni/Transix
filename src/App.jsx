@@ -5,6 +5,8 @@ import Home from './pages/Home';
 import Placeholder from './pages/Placeholder';
 import Login from './pages/Login';
 import Signup from './pages/Signup';
+import ForgotPassword from './pages/ForgotPassword';
+import ResetPassword from './pages/ResetPassword';
 import Upload from './pages/Upload';
 import Transition from './pages/Transition';
 import Profile from './pages/Profile';
@@ -24,6 +26,8 @@ export default function App() {
           <Route path="/upload" element={<Upload />} />
           <Route path="/login" element={<Login />} />
           <Route path="/signup" element={<Signup />} />
+          <Route path="/forgot-password" element={<ForgotPassword />} />
+          <Route path="/reset-password" element={<ResetPassword />} />
           <Route path="/t/:id" element={<Transition />} />
           <Route path="/dj/:id" element={<Profile />} />
           <Route path="/settings" element={<Settings />} />

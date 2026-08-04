@@ -16,7 +16,7 @@ export default function Login() {
     setLoading(true);
 
     if (!supabase) {
-      setError('Supabase non configurato. Controlla il file .env e riavvia il server.');
+      setError('Supabase non configurato.');
       setLoading(false);
       return;
     }
@@ -40,25 +40,17 @@ export default function Login() {
         <form onSubmit={handleSubmit} className="auth-form">
           <label className="auth-field">
             <span>Email</span>
-            <input
-              type="email"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              required
-              autoComplete="email"
-            />
+            <input type="email" value={email} onChange={(e) => setEmail(e.target.value)} required autoComplete="email" />
           </label>
 
           <label className="auth-field">
             <span>Password</span>
-            <input
-              type="password"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              required
-              autoComplete="current-password"
-            />
+            <input type="password" value={password} onChange={(e) => setPassword(e.target.value)} required autoComplete="current-password" />
           </label>
+
+          <div className="auth-forgot">
+            <Link to="/forgot-password">Password dimenticata?</Link>
+          </div>
 
           {error && <div className="auth-error">{error}</div>}
 

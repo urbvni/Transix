@@ -132,14 +132,15 @@
 
 /* Su mobile popover a schermo */
 @media (max-width: 480px) {
-  .save-pop {
-    position: fixed;
-    top: auto;
-    bottom: 16px;
-    left: 16px;
-    right: 16px;
-    width: auto;
-    max-height: 60vh;
-    overflow-y: auto;
-  }
+  .save-pop { width: 240px; right: -60px; }
+}
+
+.save-pop-error {
+  margin: 6px 12px 8px;
+  padding: 8px 10px;
+  background: rgba(255, 89, 89, 0.1);
+  border: 1px solid rgba(255, 89, 89, 0.3);
+  color: #ff9a9a;
+  border-radius: 6px;
+  font-size: 11px;
 }

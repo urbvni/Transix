@@ -1,15 +1,12 @@
 import { useEffect, useRef, useState } from 'react';
 import WaveSurfer from 'wavesurfer.js';
+import { supabase } from '../lib/supabase';
 import './AudioPlayer.css';
 
-/**
- * Player audio con waveform, basato su wavesurfer.js.
- * Props:
- *   - url: URL del file audio da riprodurre
- */
-export default function AudioPlayer({ url }) {
+export default function AudioPlayer({ url, transitionId }) {
   const containerRef = useRef(null);
   const wsRef = useRef(null);
+  const countedRef = useRef(false); // evita di contare più volte nella stessa sessione
   const [playing, setPlaying] = useState(false);
   const [ready, setReady] = useState(false);
   const [currentTime, setCurrentTime] = useState(0);
@@ -18,7 +15,6 @@ export default function AudioPlayer({ url }) {
   useEffect(() => {
     if (!containerRef.current || !url) return;
 
-    // Legge il colore accento dal CSS (per coerenza col brand)
     const styles = getComputedStyle(document.documentElement);
     const accentB = styles.getPropertyValue('--accent-b').trim() || '#ff7a3d';
     const border = styles.getPropertyValue('--border').trim() || '#2a2a2e';
@@ -43,13 +39,21 @@ export default function AudioPlayer({ url }) {
       setReady(true);
       setDuration(ws.getDuration());
     });
-    ws.on('play', () => setPlaying(true));
+    ws.on('play', async () => {
+      setPlaying(true);
+      // Incrementa contatore ascolti una sola volta per sessione, quando parte davvero
+      if (transitionId && !countedRef.current && supabase) {
+        countedRef.current = true;
+        // Fire-and-forget: non blocca il playback
+        supabase.rpc('increment_plays', { t_id: transitionId }).then(() => {}, () => {});
+      }
+    });
     ws.on('pause', () => setPlaying(false));
     ws.on('finish', () => setPlaying(false));
     ws.on('timeupdate', (t) => setCurrentTime(t));
 
     return () => ws.destroy();
-  }, [url]);
+  }, [url, transitionId]);
 
   function togglePlay() {
     if (!wsRef.current || !ready) return;
@@ -65,12 +69,7 @@ export default function AudioPlayer({ url }) {
 
   return (
     <div className="audio-player">
-      <button
-        className="audio-play-btn"
-        onClick={togglePlay}
-        disabled={!ready}
-        aria-label={playing ? 'Pausa' : 'Riproduci'}
-      >
+      <button className="audio-play-btn" onClick={togglePlay} disabled={!ready} aria-label={playing ? 'Pausa' : 'Riproduci'}>
         {playing ? (
           <svg viewBox="0 0 24 24" fill="currentColor" width="20" height="20">
             <rect x="6" y="5" width="4" height="14" rx="1" />

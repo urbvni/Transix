@@ -176,3 +176,40 @@
   text-align: center;
   text-decoration: none;
 }
+
+/* Checkbox privacy */
+.auth-checkbox {
+  display: flex;
+  gap: 10px;
+  align-items: flex-start;
+  padding: 8px 0;
+  font-size: 13px;
+  color: var(--text-dim);
+  cursor: pointer;
+}
+.auth-checkbox input[type="checkbox"] {
+  margin-top: 2px;
+  width: 16px;
+  height: 16px;
+  accent-color: var(--accent-b);
+  cursor: pointer;
+  flex-shrink: 0;
+}
+.auth-checkbox a {
+  color: var(--accent-a-text);
+  border-bottom: 1px solid var(--accent-a-mid);
+}
+.auth-checkbox a:hover { color: var(--accent-a); }
+
+/* Password dimenticata */
+.auth-forgot {
+  text-align: right;
+  margin-top: -8px;
+  margin-bottom: 4px;
+}
+.auth-forgot a {
+  color: var(--text-dim);
+  font-size: 12px;
+  transition: color 0.2s;
+}
+.auth-forgot a:hover { color: var(--accent-a-text); }

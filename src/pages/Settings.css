@@ -195,3 +195,47 @@
   .settings-grid { grid-template-columns: 1fr; }
   .settings-avatar-row { flex-direction: column; text-align: center; }
 }
+
+/* Danger zone */
+.settings-danger {
+  max-width: 720px;
+  margin: 60px auto 0;
+  padding: 24px;
+  background: var(--surface);
+  border: 1px solid rgba(255, 89, 89, 0.3);
+  border-radius: var(--radius-lg);
+}
+.settings-danger h2 {
+  font-family: var(--font-head);
+  font-size: 16px;
+  font-weight: 600;
+  color: #ff9a9a;
+  margin-bottom: 8px;
+}
+.settings-danger p {
+  color: var(--text-dim);
+  font-size: 13px;
+  line-height: 1.6;
+  margin-bottom: 20px;
+}
+.settings-danger-form {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+.settings-delete-btn {
+  padding: 12px;
+  background: rgba(255, 89, 89, 0.1);
+  border: 1px solid rgba(255, 89, 89, 0.4);
+  color: #ff9a9a;
+  border-radius: 8px;
+  font-size: 14px;
+  font-weight: 500;
+  transition: background 0.2s, border-color 0.2s;
+  align-self: flex-start;
+}
+.settings-delete-btn:hover:not(:disabled) {
+  background: rgba(255, 89, 89, 0.2);
+  border-color: rgba(255, 89, 89, 0.6);
+}
+.settings-delete-btn:disabled { opacity: 0.4; cursor: not-allowed; }

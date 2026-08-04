@@ -19,6 +19,7 @@ export default function Transition() {
   const [copied, setCopied] = useState(false);
   const [likeCount, setLikeCount] = useState(0);
   const [userLiked, setUserLiked] = useState(false);
+  const [deleting, setDeleting] = useState(false);
 
   useEffect(() => {
     if (!supabase || !id || authLoading) return;
@@ -48,6 +49,32 @@ export default function Transition() {
     setTimeout(() => setCopied(false), 2000);
   }
 
+  async function handleDelete() {
+    if (!confirm('Eliminare definitivamente questa transizione? Anche il file audio verrà rimosso.')) return;
+    setDeleting(true);
+
+    // Estrae il path del file audio da eliminare dallo storage
+    const t = transition;
+    if (t.audio_url) {
+      try {
+        const url = new URL(t.audio_url);
+        const parts = url.pathname.split('/transitions-audio/');
+        if (parts[1]) {
+          await supabase.storage.from('transitions-audio').remove([parts[1]]);
+        }
+      } catch (_) {}
+    }
+
+    // Elimina il record (cascata elimina anche likes, comments, collection_transitions)
+    const { error } = await supabase.from('transitions').delete().eq('id', id);
+    if (error) {
+      alert('Errore eliminazione: ' + error.message);
+      setDeleting(false);
+    } else {
+      navigate(`/dj/${user.id}`);
+    }
+  }
+
   if (loading) return <div className="container" style={{ padding: 80, textAlign: 'center' }}>Caricamento...</div>;
   if (error || !transition) {
     return (
@@ -61,6 +88,7 @@ export default function Transition() {
   const t = transition;
   const keyAClass = isMinorKey(t.key_a) ? 'key key-minor' : 'key key-major';
   const keyBClass = isMinorKey(t.key_b) ? 'key key-minor' : 'key key-major';
+  const isOwner = user?.id === t.dj_id;
 
   return (
     <div className="transition-page">
@@ -77,6 +105,7 @@ export default function Transition() {
             <h1 className="tp-title">{t.title}</h1>
             <p className="tp-by">
               di <Link to={`/dj/${t.profiles?.id}`} className="tp-dj-link">{t.profiles?.dj_name || 'DJ'}</Link>
+              <span className="tp-plays mono">· {t.plays_count || 0} ascolti</span>
             </p>
           </div>
           <div className="tp-actions">
@@ -93,7 +122,7 @@ export default function Transition() {
         </header>
 
         <div className="tp-player">
-          <AudioPlayer url={t.audio_url} />
+          <AudioPlayer url={t.audio_url} transitionId={t.id} />
         </div>
 
         <div className="tp-tracks">
@@ -153,6 +182,14 @@ export default function Transition() {
           <div className="tp-description">
             <h2>Note</h2>
             <p>{t.description}</p>
+          </div>
+        )}
+
+        {isOwner && (
+          <div className="tp-owner-actions">
+            <button className="tp-delete" onClick={handleDelete} disabled={deleting}>
+              {deleting ? 'Eliminazione...' : 'Elimina transizione'}
+            </button>
           </div>
         )}
 

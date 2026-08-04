@@ -8,17 +8,24 @@ export default function Signup() {
   const [djName, setDjName] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [privacy, setPrivacy] = useState(false);
   const [error, setError] = useState(null);
   const [loading, setLoading] = useState(false);
-  const [signupEmail, setSignupEmail] = useState(null); // Se popolato = mostra schermata "controlla email"
+  const [signupEmail, setSignupEmail] = useState(null);
 
   async function handleSubmit(e) {
     e.preventDefault();
     setError(null);
+
+    if (!privacy) {
+      setError('Devi accettare la privacy policy per continuare.');
+      return;
+    }
+
     setLoading(true);
 
     if (!supabase) {
-      setError('Supabase non configurato. Controlla il file .env e riavvia il server.');
+      setError('Supabase non configurato.');
       setLoading(false);
       return;
     }
@@ -35,8 +42,6 @@ export default function Signup() {
       return;
     }
 
-    // Se la sessione è null significa che serve conferma email (Supabase ha inviato la mail).
-    // Se invece la sessione esiste, l'utente è già loggato → vai alla home.
     if (data?.session) {
       navigate('/');
     } else {
@@ -45,7 +50,6 @@ export default function Signup() {
     }
   }
 
-  // Schermata post-registrazione: chiedi di controllare la mail
   if (signupEmail) {
     return (
       <div className="auth-page">
@@ -70,9 +74,7 @@ export default function Signup() {
               Non trovi l'email? Controlla la cartella spam.
             </p>
           </div>
-          <Link to="/login" className="auth-submit auth-submit-link">
-            Vai al login
-          </Link>
+          <Link to="/login" className="auth-submit auth-submit-link">Vai al login</Link>
         </div>
       </div>
     );
@@ -87,44 +89,30 @@ export default function Signup() {
         <form onSubmit={handleSubmit} className="auth-form">
           <label className="auth-field">
             <span>Nome d'arte DJ</span>
-            <input
-              type="text"
-              value={djName}
-              onChange={(e) => setDjName(e.target.value)}
-              required
-              minLength={2}
-              maxLength={30}
-              placeholder="es. Urbani"
-            />
+            <input type="text" value={djName} onChange={(e) => setDjName(e.target.value)} required minLength={2} maxLength={30} placeholder="es. Urbani" />
           </label>
 
           <label className="auth-field">
             <span>Email</span>
-            <input
-              type="email"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              required
-              autoComplete="email"
-            />
+            <input type="email" value={email} onChange={(e) => setEmail(e.target.value)} required autoComplete="email" />
           </label>
 
           <label className="auth-field">
             <span>Password</span>
-            <input
-              type="password"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              required
-              minLength={6}
-              autoComplete="new-password"
-            />
+            <input type="password" value={password} onChange={(e) => setPassword(e.target.value)} required minLength={6} autoComplete="new-password" />
             <small className="auth-hint">Almeno 6 caratteri</small>
+          </label>
+
+          <label className="auth-checkbox">
+            <input type="checkbox" checked={privacy} onChange={(e) => setPrivacy(e.target.checked)} required />
+            <span>
+              Accetto la <a href="#" target="_blank" rel="noopener noreferrer">privacy policy</a>
+            </span>
           </label>
 
           {error && <div className="auth-error">{error}</div>}
 
-          <button type="submit" className="auth-submit" disabled={loading}>
+          <button type="submit" className="auth-submit" disabled={loading || !privacy}>
             {loading ? 'Creazione in corso...' : 'Registrati'}
           </button>
         </form>
