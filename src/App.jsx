@@ -1,6 +1,7 @@
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import { AuthProvider } from './lib/AuthContext';
 import Navbar from './components/Navbar';
+import Footer from './components/Footer';
 import Home from './pages/Home';
 import Placeholder from './pages/Placeholder';
 import Login from './pages/Login';
@@ -33,6 +34,7 @@ export default function App() {
           <Route path="/settings" element={<Settings />} />
           <Route path="*" element={<Placeholder title="Pagina non trovata" />} />
         </Routes>
+        <Footer />
       </BrowserRouter>
     </AuthProvider>
   );
