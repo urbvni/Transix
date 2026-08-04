@@ -91,7 +91,7 @@ export default function Home() {
             <span className="hero-eyebrow">Libreria di transizioni</span>
             <h1 className="hero-title">
               Non il set.<br />
-              <span className="hero-title-accent">Il cambio.</span>
+              <span className="hero-title-accent">La transizione.</span>
             </h1>
             <p className="hero-sub">
               Il punto esatto in cui due tracce diventano una. Uno strumento
