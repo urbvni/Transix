@@ -142,7 +142,7 @@ export default function Upload() {
             <div className="form-grid">
               <label className="form-field form-field-full">
                 <span>Titolo *</span>
-                <input type="text" value={title} onChange={(e) => setTitle(e.target.value)} required placeholder="es. Nu Disco → Deep House" disabled={uploading} />
+                <input type="text" value={title} onChange={(e) => setTitle(e.target.value)} required placeholder="Starsips VS One More Time" disabled={uploading} />
               </label>
               <label className="form-field form-field-full">
                 <span>Descrizione</span>
