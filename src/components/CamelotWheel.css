@@ -62,11 +62,9 @@
 
 .cw-seg-hover { filter: brightness(1.6); }
 
-.cw-seg-active {
-  fill: url(#) !important; /* forziamo il colore inline sotto */
-}
-.cw-seg-a.cw-seg-active { fill: var(--accent-a); filter: drop-shadow(0 0 12px var(--accent-a)); }
-.cw-seg-b.cw-seg-active { fill: var(--accent-b); filter: drop-shadow(0 0 12px var(--accent-b)); }
+
+.cw-seg-a.cw-seg-active { fill: var(--accent-a) !important; filter: drop-shadow(0 0 12px var(--accent-a)); }
+.cw-seg-b.cw-seg-active { fill: var(--accent-b) !important; filter: drop-shadow(0 0 12px var(--accent-b)); }
 
 /* Compatibili */
 .cw-seg-a.cw-seg-comp-adjacent { fill: rgba(110, 123, 242, 0.5); }
