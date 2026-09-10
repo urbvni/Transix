@@ -14,6 +14,7 @@ import Profile from './pages/Profile';
 import Settings from './pages/Settings';
 import HowItWorks from './pages/HowItWorks';
 import Explore from './pages/Explore';
+import FollowList from './pages/FollowList';
 
 export default function App() {
   return (
@@ -31,6 +32,8 @@ export default function App() {
           <Route path="/reset-password" element={<ResetPassword />} />
           <Route path="/t/:id" element={<Transition />} />
           <Route path="/dj/:id" element={<Profile />} />
+          <Route path="/dj/:id/followers" element={<FollowList mode="followers" />} />
+          <Route path="/dj/:id/following" element={<FollowList mode="following" />} />
           <Route path="/settings" element={<Settings />} />
           <Route path="*" element={<Placeholder title="Pagina non trovata" />} />
         </Routes>

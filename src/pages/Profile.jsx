@@ -4,6 +4,7 @@ import { supabase } from '../lib/supabase';
 import { useAuth } from '../lib/AuthContext';
 import { attachCounts } from '../lib/counts';
 import TransitionCard from '../components/TransitionCard';
+import FollowButton from '../components/FollowButton';
 import './Profile.css';
 
 export default function Profile() {
@@ -13,8 +14,10 @@ export default function Profile() {
   const [uploads, setUploads] = useState([]);
   const [likedTransitions, setLikedTransitions] = useState([]);
   const [collections, setCollections] = useState([]);
-  const [openCollection, setOpenCollection] = useState(null); // id collezione espansa
-  const [collectionItems, setCollectionItems] = useState({}); // { collectionId: [transitions] }
+  const [openCollection, setOpenCollection] = useState(null);
+  const [collectionItems, setCollectionItems] = useState({});
+  const [followersCount, setFollowersCount] = useState(0);
+  const [followingCount, setFollowingCount] = useState(0);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [tab, setTab] = useState('uploads');
@@ -29,7 +32,6 @@ export default function Profile() {
   async function fetchAll() {
     setLoading(true);
 
-    // Profilo
     const { data: profileData, error: profileError } = await supabase
       .from('profiles').select('*').eq('id', id).single();
     if (profileError || !profileData) {
@@ -37,42 +39,38 @@ export default function Profile() {
     }
     setProfile(profileData);
 
+    // Follower / Following counts
+    const [{ data: fData }, { data: gData }] = await Promise.all([
+      supabase.from('follows').select('follower_id').eq('following_id', id),
+      supabase.from('follows').select('following_id').eq('follower_id', id),
+    ]);
+    setFollowersCount(fData?.length || 0);
+    setFollowingCount(gData?.length || 0);
+
     // Uploads
     const { data: txData } = await supabase
       .from('transitions')
       .select(`id, title, key_a, key_b, bpm_a_original, bpm_b_original, bpm_sync, track_a_title, track_a_artist, track_b_title, track_b_artist, created_at, genres ( name )`)
       .eq('dj_id', id).order('created_at', { ascending: false });
-
     if (txData) {
       const normalized = txData.map((t) => normalize(t, profileData.dj_name));
       setUploads(await attachCounts(normalized));
     }
 
-    // Like pubblici (transizioni a cui l'utente ha messo like)
+    // Like pubblici
     const { data: likesData } = await supabase
       .from('likes')
-      .select(`
-        transition_id,
-        transitions (
-          id, title, key_a, key_b,
-          bpm_a_original, bpm_b_original, bpm_sync,
-          track_a_title, track_a_artist, track_b_title, track_b_artist,
-          created_at,
-          profiles ( dj_name ),
-          genres ( name )
-        )
-      `)
+      .select(`transition_id, transitions ( id, title, key_a, key_b, bpm_a_original, bpm_b_original, bpm_sync, track_a_title, track_a_artist, track_b_title, track_b_artist, created_at, profiles ( dj_name ), genres ( name ) )`)
       .eq('user_id', id)
       .order('created_at', { ascending: false });
-
     if (likesData) {
       const normalized = likesData
-        .filter((l) => l.transitions) // esclude like a transizioni cancellate
+        .filter((l) => l.transitions)
         .map((l) => normalize(l.transitions, l.transitions.profiles?.dj_name));
       setLikedTransitions(await attachCounts(normalized));
     }
 
-    // Collezioni (solo se sto guardando il MIO profilo)
+    // Collezioni (solo owner)
     if (isOwnProfile) {
       const { data: cols } = await supabase
         .from('collections')
@@ -88,9 +86,7 @@ export default function Profile() {
 
   function normalize(t, djName) {
     return {
-      id: t.id,
-      title: t.title,
-      dj_name: djName || 'DJ',
+      id: t.id, title: t.title, dj_name: djName || 'DJ',
       track_a: { title: t.track_a_title, artist: t.track_a_artist },
       track_b: { title: t.track_b_title, artist: t.track_b_artist },
       key_a: t.key_a, key_b: t.key_b,
@@ -102,33 +98,18 @@ export default function Profile() {
   }
 
   async function toggleCollection(collectionId) {
-    if (openCollection === collectionId) {
-      setOpenCollection(null);
-      return;
-    }
+    if (openCollection === collectionId) { setOpenCollection(null); return; }
     setOpenCollection(collectionId);
-    if (collectionItems[collectionId]) return; // già caricata
+    if (collectionItems[collectionId]) return;
 
     const { data } = await supabase
       .from('collection_transitions')
-      .select(`
-        transition_id,
-        transitions (
-          id, title, key_a, key_b,
-          bpm_a_original, bpm_b_original, bpm_sync,
-          track_a_title, track_a_artist, track_b_title, track_b_artist,
-          created_at,
-          profiles ( dj_name ),
-          genres ( name )
-        )
-      `)
+      .select(`transition_id, transitions ( id, title, key_a, key_b, bpm_a_original, bpm_b_original, bpm_sync, track_a_title, track_a_artist, track_b_title, track_b_artist, created_at, profiles ( dj_name ), genres ( name ) )`)
       .eq('collection_id', collectionId)
       .order('added_at', { ascending: false });
 
     if (data) {
-      const normalized = data
-        .filter((r) => r.transitions)
-        .map((r) => normalize(r.transitions, r.transitions.profiles?.dj_name));
+      const normalized = data.filter((r) => r.transitions).map((r) => normalize(r.transitions, r.transitions.profiles?.dj_name));
       const withCounts = await attachCounts(normalized);
       setCollectionItems((prev) => ({ ...prev, [collectionId]: withCounts }));
     }
@@ -142,6 +123,11 @@ export default function Profile() {
       setCollections((c) => c.filter((x) => x.id !== collectionId));
       if (openCollection === collectionId) setOpenCollection(null);
     }
+  }
+
+  function handleFollowChange(newFollowing) {
+    // Aggiorna counter follower in tempo reale quando io seguo/smetto di seguire
+    setFollowersCount((c) => c + (newFollowing ? 1 : -1));
   }
 
   if (loading) return <div className="container" style={{ padding: 80, textAlign: 'center' }}>Caricamento...</div>;
@@ -172,18 +158,32 @@ export default function Profile() {
             <span className="profile-eyebrow mono">DJ</span>
             <h1 className="profile-name">{profile.dj_name}</h1>
             {profile.bio && <p className="profile-bio">{profile.bio}</p>}
-            <div className="profile-stats mono">
-              <span>{uploads.length} {uploads.length === 1 ? 'transizione' : 'transizioni'}</span>
-              <span>{likedTransitions.length} like</span>
+
+            <div className="profile-stats">
+              <div className="profile-stat">
+                <span className="profile-stat-num mono">{uploads.length}</span>
+                <span className="profile-stat-label mono">{uploads.length === 1 ? 'transizione' : 'transizioni'}</span>
+              </div>
+              <Link to={`/dj/${id}/followers`} className="profile-stat profile-stat-link">
+                <span className="profile-stat-num mono">{followersCount}</span>
+                <span className="profile-stat-label mono">follower</span>
+              </Link>
+              <Link to={`/dj/${id}/following`} className="profile-stat profile-stat-link">
+                <span className="profile-stat-num mono">{followingCount}</span>
+                <span className="profile-stat-label mono">seguiti</span>
+              </Link>
             </div>
           </div>
 
-          {isOwnProfile && (
-            <Link to="/settings" className="profile-edit">Modifica profilo</Link>
-          )}
+          <div className="profile-actions">
+            {isOwnProfile ? (
+              <Link to="/settings" className="profile-edit">Modifica profilo</Link>
+            ) : (
+              <FollowButton targetUserId={id} onChange={handleFollowChange} />
+            )}
+          </div>
         </header>
 
-        {/* Tabs */}
         <div className="profile-tabs">
           <button className={`profile-tab ${tab === 'uploads' ? 'profile-tab-active' : ''}`} onClick={() => setTab('uploads')}>
             Transizioni <span className="mono">{uploads.length}</span>
@@ -198,7 +198,6 @@ export default function Profile() {
           )}
         </div>
 
-        {/* Contenuto tab */}
         {tab === 'uploads' && (
           <section>
             {uploads.length > 0 ? (
@@ -207,9 +206,7 @@ export default function Profile() {
               </div>
             ) : (
               <div className="profile-empty">
-                {isOwnProfile
-                  ? <>Non hai ancora caricato transizioni. <Link to="/upload" className="profile-empty-link">Carica la prima</Link>.</>
-                  : 'Nessuna transizione caricata da questo DJ.'}
+                {isOwnProfile ? <>Non hai ancora caricato transizioni. <Link to="/upload" className="profile-empty-link">Carica la prima</Link>.</> : 'Nessuna transizione caricata da questo DJ.'}
               </div>
             )}
           </section>
@@ -242,10 +239,7 @@ export default function Profile() {
                   <span className="coll-name">{c.name}</span>
                   {c.is_default && <span className="coll-default mono">default</span>}
                   {!c.is_default && (
-                    <span
-                      className="coll-delete"
-                      onClick={(e) => { e.stopPropagation(); deleteCollection(c.id, c.is_default); }}
-                    >
+                    <span className="coll-delete" onClick={(e) => { e.stopPropagation(); deleteCollection(c.id, c.is_default); }}>
                       Elimina
                     </span>
                   )}

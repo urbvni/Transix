@@ -1,0 +1,45 @@
+.follow-btn {
+  padding: 10px 24px;
+  background: linear-gradient(135deg, var(--accent-b), #ff9a5c);
+  color: #1a0800;
+  border-radius: 8px;
+  font-weight: 600;
+  font-size: 14px;
+  transition: box-shadow 0.3s, transform 0.15s, background 0.2s, color 0.2s, border-color 0.2s;
+  cursor: pointer;
+  border: 1px solid transparent;
+  min-width: 120px;
+}
+.follow-btn:hover:not(:disabled) {
+  box-shadow: 0 0 24px rgba(255, 122, 61, 0.4);
+  transform: translateY(-1px);
+}
+.follow-btn:disabled { opacity: 0.6; cursor: wait; }
+
+/* Stato "già seguito" */
+.follow-btn-following {
+  background: transparent;
+  color: var(--text);
+  border: 1px solid var(--border);
+}
+.follow-btn-following:hover:not(:disabled) {
+  background: rgba(255, 89, 89, 0.1);
+  border-color: rgba(255, 89, 89, 0.4);
+  color: #ff9a9a;
+  box-shadow: none;
+  transform: none;
+}
+
+/* Swap label on hover */
+.follow-btn-following .follow-label-hover { display: none; }
+.follow-btn-following:hover .follow-label-default { display: none; }
+.follow-btn-following:hover .follow-label-hover { display: inline; }
+
+/* Skeleton (mentre carica) */
+.follow-btn-skeleton {
+  background: var(--surface);
+  color: transparent;
+  cursor: default;
+  min-width: 120px;
+  height: 40px;
+}

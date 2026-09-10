@@ -241,3 +241,45 @@
   border-top: 1px solid var(--border);
   padding-top: 20px;
 }
+
+/* SOVRASCRIVI le regole vecchie con queste - aggiunte in fondo al file esistente */
+
+.profile-stats {
+  display: flex;
+  gap: 28px;
+  margin-top: 20px;
+  flex-wrap: wrap;
+}
+
+.profile-stat {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 2px;
+  color: var(--text);
+  text-decoration: none;
+}
+.profile-stat-num {
+  font-size: 20px;
+  font-weight: 600;
+  color: var(--text);
+}
+.profile-stat-label {
+  font-size: 11px;
+  color: var(--text-dim);
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+}
+
+.profile-stat-link {
+  cursor: pointer;
+  transition: transform 0.15s;
+}
+.profile-stat-link:hover .profile-stat-num { color: var(--accent-b-text); }
+.profile-stat-link:hover .profile-stat-label { color: var(--text); }
+
+.profile-actions {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+}
