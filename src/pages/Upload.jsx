@@ -7,7 +7,7 @@ import { readAudioDuration } from '../lib/audio';
 import TrackAutocomplete from '../components/TrackAutocomplete';
 import './Upload.css';
 
-const MAX_DURATION_SECONDS = 30;
+const MAX_DURATION_SECONDS = 90;
 const STORAGE_BUCKET = 'transitions-audio';
 
 export default function Upload() {
@@ -132,7 +132,7 @@ export default function Upload() {
             <div className="file-input">
               <input type="file" accept="audio/*" onChange={handleFileChange} id="audio-input" disabled={uploading} />
               <label htmlFor="audio-input" className="file-label">
-                {audioFile ? `${audioFile.name} — ${audioDuration}s` : 'Scegli file audio (max 30s)'}
+                {audioFile ? `${audioFile.name} — ${audioDuration}s` : 'Scegli file audio (max 90s)'}
               </label>
             </div>
           </section>
