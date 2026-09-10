@@ -18,15 +18,21 @@ export default function FollowButton({ targetUserId, onChange }) {
 
   useEffect(() => {
     if (!user || !supabase || !targetUserId) { setLoaded(true); return; }
+    let ignore = false;
     supabase.from('follows')
       .select('follower_id')
       .eq('follower_id', user.id)
       .eq('following_id', targetUserId)
       .maybeSingle()
       .then(({ data }) => {
-        setFollowing(!!data);
+        if (ignore) return;
+        // Non sovrascrivere lo stato se stiamo mostrando un update ottimistico in corso
+        if (!busy) {
+          setFollowing(!!data);
+        }
         setLoaded(true);
       });
+    return () => { ignore = true; };
   }, [user, targetUserId]);
 
   async function toggle() {
