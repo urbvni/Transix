@@ -1,0 +1,10 @@
+User-agent: *
+Allow: /
+Disallow: /settings
+Disallow: /upload
+Disallow: /login
+Disallow: /signup
+Disallow: /forgot-password
+Disallow: /reset-password
+
+Sitemap: https://transix-ten.vercel.app/sitemap.xml
